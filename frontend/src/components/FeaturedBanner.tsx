@@ -7,6 +7,7 @@ export interface FeaturedBannerProps {
   description: string;
   ctaLabel?: string;
   ctaUrl: string;
+  onCtaClick?: () => void;
   category?: string;
   resourceType?: "pdf" | "video" | "template" | "article";
   stats?: { value: string; label: string }[];
@@ -99,6 +100,7 @@ export default function FeaturedBanner({
   description,
   ctaLabel = "Explore the RoadMap →",
   ctaUrl,
+  onCtaClick,
   category = "Framework",
   resourceType = "pdf",
   stats = [
@@ -119,6 +121,10 @@ export default function FeaturedBanner({
   };
 
   const handleCta = () => {
+    if (onCtaClick) {
+      onCtaClick();
+      return;
+    }
     window.open(ctaUrl, "_blank", "noopener,noreferrer");
   };
 

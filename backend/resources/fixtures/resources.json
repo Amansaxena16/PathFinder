@@ -1,0 +1,299 @@
+[
+  {
+    "model": "resources.resource",
+    "pk": 1,
+    "fields": {
+      "title": "The Pathfinder Road(Map)",
+      "slug": "pathfinder-roadmap",
+      "summary": "A founder-first guide to move from scattered motion to structured momentum through Ideate, Innovate, and Elevate.",
+      "description": "A founder-first guide to move from scattered motion to structured momentum through Ideate, Innovate, and Elevate.",
+      "category": "framework",
+      "resource_type": "pdf",
+      "read_time": "8 min read",
+      "tags": ["0→1", "Strategy", "RoadMap"],
+      "content_template": "download",
+      "overview": [
+        "The Pathfinder Road(Map) frames early-stage progress as a deliberate sequence of choices rather than a rush toward traction.",
+        "It gives founders a shared language for what to champion, what to build first, and how to compound results."
+      ],
+      "sections": [
+        {"title": "Why it matters", "paragraphs": ["Founders often move with speed before they have enough strategic structure around the opportunity."]},
+        {"title": "How Pathfinder uses it", "paragraphs": ["The framework helps orient conversations and align high-stakes founder decisions."]}
+      ],
+      "key_points": [
+        "Clarifies the founder journey across Ideate, Innovate, and Elevate",
+        "Creates a common language for strategic discussions",
+        "Supports downloadable framework assets"
+      ],
+      "external_url": "https://www.pathfinder.build/",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": true,
+      "is_published": true,
+      "published_at": "2026-04-13T08:00:00Z",
+      "created_at": "2026-04-13T08:00:00Z",
+      "updated_at": "2026-04-13T08:00:00Z",
+      "related_resources": [2, 3, 7]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 2,
+    "fields": {
+      "title": "The Obelisk System: Structure the Advantage",
+      "slug": "obelisk-system",
+      "summary": "A practical breakdown of how Pathfinder helps founders align choices, define purpose, and build a stronger strategic spine.",
+      "description": "A practical breakdown of how Pathfinder helps founders align choices, define purpose, and build a stronger strategic spine.",
+      "category": "framework",
+      "resource_type": "article",
+      "read_time": "6 min read",
+      "tags": ["Obelisk", "Advantage", "Clarity"],
+      "content_template": "concept",
+      "overview": [
+        "The Obelisk System describes strategic advantage as something that must be structured layer by layer.",
+        "It is useful when a startup has motion but lacks coherence between product, market, and narrative."
+      ],
+      "sections": [
+        {"title": "Base", "paragraphs": ["The base focuses on true heading and opportunity definition."]},
+        {"title": "Spine", "paragraphs": ["The spine links positioning, product focus, and go-to-market logic."]},
+        {"title": "Apex", "paragraphs": ["The apex is where the work becomes repeatable and easier to articulate."]}
+      ],
+      "key_points": [
+        "Turns abstract strategy into a visible structure",
+        "Helps unify maker, market, and method",
+        "Useful before scale"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-12T08:00:00Z",
+      "created_at": "2026-04-12T08:00:00Z",
+      "updated_at": "2026-04-12T08:00:00Z",
+      "related_resources": [1, 5, 4]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 3,
+    "fields": {
+      "title": "0→1 Founder Alignment Playbook",
+      "slug": "founder-alignment-playbook",
+      "summary": "A simple operating playbook for founders who need a sharper narrative, clearer priorities, and a more coherent next move.",
+      "description": "A simple operating playbook for founders who need a sharper narrative, clearer priorities, and a more coherent next move.",
+      "category": "playbook",
+      "resource_type": "pdf",
+      "read_time": "10 min read",
+      "tags": ["Founder", "Alignment", "Execution"],
+      "content_template": "download",
+      "overview": [
+        "This playbook turns Pathfinder's thinking into a more execution-focused guide.",
+        "It is meant for founders who need help translating strategy into weekly action."
+      ],
+      "sections": [
+        {"title": "What founders usually get wrong", "paragraphs": ["Urgency is often mistaken for progress, which creates noise across the team."]},
+        {"title": "What this playbook helps with", "paragraphs": ["It gives founders a repeatable sequence for setting direction and maintaining signal."]}
+      ],
+      "key_points": [
+        "Clarifies weekly execution around one strategic direction",
+        "Improves internal founder alignment",
+        "Designed as a downloadable operating resource"
+      ],
+      "external_url": "https://www.pathfinder.build/",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-11T08:00:00Z",
+      "created_at": "2026-04-11T08:00:00Z",
+      "updated_at": "2026-04-11T08:00:00Z",
+      "related_resources": [1, 6, 5]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 4,
+    "fields": {
+      "title": "Signal Before Scale Market Map",
+      "slug": "signal-before-scale-market-map",
+      "summary": "A market-mapping template to help early-stage teams see whitespace, understand competition, and focus on the right opportunity.",
+      "description": "A market-mapping template to help early-stage teams see whitespace, understand competition, and focus on the right opportunity.",
+      "category": "market_map",
+      "resource_type": "template",
+      "read_time": "Template",
+      "tags": ["Market Map", "Positioning", "Opportunity"],
+      "content_template": "download",
+      "overview": [
+        "This template helps founders move from broad industry intuition to a more deliberate map of the market.",
+        "It is built for teams who need sharper context before deciding what to build or where to sell."
+      ],
+      "sections": [
+        {"title": "What the template captures", "paragraphs": ["The map surfaces adjacent players, alternatives, whitespace, and positioning assumptions."]},
+        {"title": "How to use it", "paragraphs": ["Founders can use the template before scoping product or shaping go-to-market."]}
+      ],
+      "key_points": [
+        "Supports stronger market context before product decisions",
+        "Useful for positioning and opportunity sizing",
+        "Works as a downloadable workshop artifact"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-10T08:00:00Z",
+      "created_at": "2026-04-10T08:00:00Z",
+      "updated_at": "2026-04-10T08:00:00Z",
+      "related_resources": [2, 8, 7]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 5,
+    "fields": {
+      "title": "The Blind Spot in Early-Stage Growth",
+      "slug": "blind-spot-growth",
+      "summary": "A short read on why founders often chase capital and customers before fixing the strategic gaps underneath both.",
+      "description": "A short read on why founders often chase capital and customers before fixing the strategic gaps underneath both.",
+      "category": "blog",
+      "resource_type": "article",
+      "read_time": "4 min read",
+      "tags": ["Orbit", "Blind Spot", "Growth"],
+      "content_template": "research",
+      "overview": [
+        "This article captures one of Pathfinder's core observations: founders often optimize for visible symptoms while deeper issues remain unresolved.",
+        "The result is a company that looks active but lacks coherence."
+      ],
+      "sections": [
+        {"title": "The hidden issue", "paragraphs": ["What looks like a customer or capital problem is often a market clarity or sequencing problem underneath."]},
+        {"title": "What Pathfinder looks for", "paragraphs": ["The team asks what the current work is actually proving and what still needs sharper definition."]}
+      ],
+      "key_points": [
+        "Explains the difference between motion and meaningful progress",
+        "Shows Pathfinder's point of view on growth confusion",
+        "Fits a research-style article template"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-09T08:00:00Z",
+      "created_at": "2026-04-09T08:00:00Z",
+      "updated_at": "2026-04-09T08:00:00Z",
+      "related_resources": [2, 8, 3]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 6,
+    "fields": {
+      "title": "Founder Weekly Review Template",
+      "slug": "weekly-founder-review-template",
+      "summary": "A lightweight reflection template to track decisions, traction signals, and where your startup is creating real progress.",
+      "description": "A lightweight reflection template to track decisions, traction signals, and where your startup is creating real progress.",
+      "category": "tool",
+      "resource_type": "template",
+      "read_time": "Template",
+      "tags": ["Template", "Review", "Traction"],
+      "content_template": "download",
+      "overview": [
+        "This tool gives founders a simple cadence for reviewing the week through a strategic lens.",
+        "It helps separate activity from evidence and anecdote from learning."
+      ],
+      "sections": [
+        {"title": "Inputs", "paragraphs": ["The review captures the most important decisions, signals, and changed assumptions from the week."]},
+        {"title": "Outputs", "paragraphs": ["It leaves founders with a cleaner next-step list and a clearer articulation of progress."]}
+      ],
+      "key_points": [
+        "Creates a repeatable weekly reflection loop",
+        "Helps founders communicate progress more clearly",
+        "Ideal as a downloadable content asset"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-08T08:00:00Z",
+      "created_at": "2026-04-08T08:00:00Z",
+      "updated_at": "2026-04-08T08:00:00Z",
+      "related_resources": [3, 1, 7]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 7,
+    "fields": {
+      "title": "The Fitment Effect in Action",
+      "slug": "fitment-effect-case-study",
+      "summary": "A case study showing how stronger alignment between maker, market, and method changed the trajectory of an early-stage company.",
+      "description": "A case study showing how stronger alignment between maker, market, and method changed the trajectory of an early-stage company.",
+      "category": "case_study",
+      "resource_type": "video",
+      "read_time": "7 min watch",
+      "tags": ["Case Study", "Fitment", "Trajectory"],
+      "content_template": "concept",
+      "overview": [
+        "This case study demonstrates Pathfinder's belief that progress accelerates once the founder, the market, and the execution model reinforce each other.",
+        "Rather than adding complexity, the work simplified direction and made next decisions more obvious."
+      ],
+      "sections": [
+        {"title": "Initial situation", "paragraphs": ["The team had momentum on paper but little clarity around what was actually aligned."]},
+        {"title": "Strategic shift", "paragraphs": ["A tighter framing of the opportunity created a more coherent route to market."]}
+      ],
+      "key_points": [
+        "Demonstrates Pathfinder's frameworks in a real scenario",
+        "Useful example content for a standard case-study template",
+        "Adds depth beyond frameworks and tools"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-07T08:00:00Z",
+      "created_at": "2026-04-07T08:00:00Z",
+      "updated_at": "2026-04-07T08:00:00Z",
+      "related_resources": [2, 4, 6]
+    }
+  },
+  {
+    "model": "resources.resource",
+    "pk": 8,
+    "fields": {
+      "title": "Industry Patterns in 0→1 Decision-Making",
+      "slug": "industry-patterns-report",
+      "summary": "A short research-style briefing on recurring decision patterns Pathfinder sees across early-stage founder journeys.",
+      "description": "A short research-style briefing on recurring decision patterns Pathfinder sees across early-stage founder journeys.",
+      "category": "blog",
+      "resource_type": "article",
+      "read_time": "5 min read",
+      "tags": ["Research", "Patterns", "Decision-Making"],
+      "content_template": "research",
+      "overview": [
+        "This research-style resource collects recurring patterns Pathfinder sees when founders are under pressure.",
+        "It is designed as a lighter-weight thought piece that still feels connected to the firm's strategic practice."
+      ],
+      "sections": [
+        {"title": "Observed patterns", "paragraphs": ["Teams jump too quickly to channels, treat traction as a volume problem, and underinvest in sharpening what they are proving."]},
+        {"title": "Strategic implication", "paragraphs": ["A stronger decision system makes it easier to choose what deserves effort now and what should wait."]}
+      ],
+      "key_points": [
+        "Adds a research representation to the library",
+        "Supports Pathfinder's role as a strategy studio",
+        "Useful for showing range in the resource system"
+      ],
+      "external_url": "",
+      "download_file": "",
+      "thumbnail": "",
+      "is_featured": false,
+      "is_published": true,
+      "published_at": "2026-04-06T08:00:00Z",
+      "created_at": "2026-04-06T08:00:00Z",
+      "updated_at": "2026-04-06T08:00:00Z",
+      "related_resources": [5, 4, 1]
+    }
+  }
+]

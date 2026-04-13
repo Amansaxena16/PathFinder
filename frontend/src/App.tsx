@@ -1,96 +1,24 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryTabs, {
   type ResourceCategory as TabCategory,
 } from "./components/CatergoryTab";
 import FeaturedBanner from "./components/FeaturedBanner";
+import ResourceDetailPage from "./components/ResourceDetailPage";
+import ResourceStateNotice from "./components/ResourceStateNotice";
 import ResourceCard, {
   type ResourceCategory as CardCategory,
-  type ResourceType,
 } from "./components/ResourceCard";
 import ResourceHero from "./components/ResourceHero";
-
-interface ResourceItem {
-  id: number;
-  title: string;
-  description: string;
-  category: CardCategory;
-  resourceType: ResourceType;
-  fileUrl: string;
-  isFeatured?: boolean;
-  tags: string[];
-  readTime: string;
-}
-
-const RESOURCE_DATA: ResourceItem[] = [
-  {
-    id: 1,
-    title: "The Pathfinder Road(Map)",
-    description:
-      "A founder-first guide to move from scattered motion to structured momentum through Ideate, Innovate, and Elevate.",
-    category: "framework",
-    resourceType: "pdf",
-    fileUrl: "https://www.pathfinder.build/",
-    isFeatured: true,
-    tags: ["0→1", "Strategy", "RoadMap"],
-    readTime: "8 min read",
-  },
-  {
-    id: 2,
-    title: "The Obelisk System: Structure the Advantage",
-    description:
-      "A practical breakdown of how Pathfinder helps founders align choices, define purpose, and build a stronger strategic spine.",
-    category: "framework",
-    resourceType: "article",
-    fileUrl: "https://www.pathfinder.build/",
-    tags: ["Obelisk", "Advantage", "Clarity"],
-    readTime: "6 min read",
-  },
-  {
-    id: 3,
-    title: "0→1 Founder Alignment Playbook",
-    description:
-      "A simple operating playbook for founders who need a sharper narrative, clearer priorities, and a more coherent next move.",
-    category: "playbook",
-    resourceType: "pdf",
-    fileUrl: "https://www.pathfinder.build/",
-    tags: ["Founder", "Alignment", "Execution"],
-    readTime: "10 min read",
-  },
-  {
-    id: 4,
-    title: "Signal Before Scale Market Map",
-    description:
-      "A market-mapping template to help early-stage teams see whitespace, understand competition, and focus on the right opportunity.",
-    category: "market_map",
-    resourceType: "template",
-    fileUrl: "https://www.pathfinder.build/",
-    tags: ["Market Map", "Positioning", "Opportunity"],
-    readTime: "Template",
-  },
-  {
-    id: 5,
-    title: "The Blind Spot in Early-Stage Growth",
-    description:
-      "A short read on why founders often chase capital and customers before fixing the strategic gaps underneath both.",
-    category: "blog",
-    resourceType: "article",
-    fileUrl: "https://www.pathfinder.build/",
-    tags: ["Orbit", "Blind Spot", "Growth"],
-    readTime: "4 min read",
-  },
-  {
-    id: 6,
-    title: "Founder Weekly Review Template",
-    description:
-      "A lightweight reflection template to track decisions, traction signals, and where your startup is creating real progress.",
-    category: "tool",
-    resourceType: "template",
-    fileUrl: "https://www.pathfinder.build/",
-    tags: ["Template", "Review", "Traction"],
-    readTime: "Template",
-  },
-];
+import {
+  PATHFINDER_PILLARS,
+  fetchFeaturedResource,
+  fetchResourceDetail,
+  fetchResourceMeta,
+  fetchResources,
+  type ResourceDetailItem,
+  type ResourceListItem,
+  type ResourceMeta,
+} from "./data/resources";
 
 const CATEGORY_ORDER: CardCategory[] = [
   "framework",
@@ -101,60 +29,201 @@ const CATEGORY_ORDER: CardCategory[] = [
   "blog",
 ];
 
-const PATHFINDER_PILLARS = [
-  {
-    title: "Align",
-    description:
-      "Clarify the opportunity, sharpen the value proposition, and understand where real traction can come from.",
-  },
-  {
-    title: "Act",
-    description:
-      "Translate strategy into focused founder moves through practical frameworks, playbooks, and reusable tools.",
-  },
-  {
-    title: "Advance",
-    description:
-      "Build momentum with a stronger market view, better sequencing, and a more coherent path from 0 to 1.",
-  },
-];
+function getRouteType(pathname: string) {
+  const cleanedPath = pathname.replace(/\/+$/, "") || "/";
+
+  if (cleanedPath === "/" || cleanedPath === "/resources") {
+    return { type: "library" as const };
+  }
+
+  const detailMatch = cleanedPath.match(/^\/resources\/([^/]+)$/);
+  if (detailMatch) {
+    return { type: "detail" as const, slug: detailMatch[1] };
+  }
+
+  return { type: "not-found" as const };
+}
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<TabCategory>("all");
+  const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
+  const [resources, setResources] = useState<ResourceListItem[]>([]);
+  const [featuredResource, setFeaturedResource] = useState<ResourceDetailItem | null>(null);
+  const [resourceMeta, setResourceMeta] = useState<ResourceMeta | null>(null);
+  const [detailResource, setDetailResource] = useState<ResourceDetailItem | null>(null);
+  const [loadedLibraryKey, setLoadedLibraryKey] = useState<string | null>(null);
+  const [libraryErrorKey, setLibraryErrorKey] = useState<string | null>(null);
+  const [libraryError, setLibraryError] = useState<string | null>(null);
+  const [loadedDetailSlug, setLoadedDetailSlug] = useState<string | null>(null);
+  const [detailErrorSlug, setDetailErrorSlug] = useState<string | null>(null);
+  const [detailError, setDetailError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handlePopState = () => setCurrentPath(window.location.pathname);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const navigateTo = (path: string) => {
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, "", path);
+      setCurrentPath(path);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const route = getRouteType(currentPath);
+  const detailSlug = route.type === "detail" ? route.slug : null;
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
+  const libraryRequestKey = `${activeCategory}:${normalizedQuery}`;
 
-  const filteredResources = RESOURCE_DATA.filter((resource) => {
-    const matchesCategory =
-      activeCategory === "all" || resource.category === activeCategory;
-    const matchesSearch =
-      normalizedQuery.length === 0 ||
-      resource.title.toLowerCase().includes(normalizedQuery) ||
-      resource.description.toLowerCase().includes(normalizedQuery) ||
-      resource.tags.some((tag) => tag.toLowerCase().includes(normalizedQuery));
+  useEffect(() => {
+    const controller = new AbortController();
 
-    return matchesCategory && matchesSearch;
-  });
+    Promise.all([
+      fetchResources(
+        {
+          category: activeCategory,
+          search: searchQuery,
+        },
+        controller.signal
+      ),
+      fetchResourceMeta(controller.signal),
+      fetchFeaturedResource(controller.signal),
+    ])
+      .then(([fetchedResources, fetchedMeta, fetchedFeatured]) => {
+        setResources(fetchedResources);
+        setResourceMeta(fetchedMeta);
+        setFeaturedResource(fetchedFeatured);
+        setLoadedLibraryKey(libraryRequestKey);
+        setLibraryErrorKey(null);
+        setLibraryError(null);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setResources([]);
+        setFeaturedResource(null);
+        setResourceMeta(null);
+        setLibraryErrorKey(libraryRequestKey);
+        setLibraryError("Unable to load the Pathfinder library right now.");
+      });
 
-  const featuredResource = RESOURCE_DATA.find((resource) => resource.isFeatured);
+    return () => controller.abort();
+  }, [activeCategory, libraryRequestKey, searchQuery]);
+
+  useEffect(() => {
+    if (!detailSlug) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    fetchResourceDetail(detailSlug, controller.signal)
+      .then((resource) => {
+        setDetailResource(resource);
+        setLoadedDetailSlug(detailSlug);
+        setDetailErrorSlug(null);
+        setDetailError(null);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setDetailErrorSlug(detailSlug);
+        setDetailError("We couldn't load this resource detail page.");
+      });
+
+    return () => controller.abort();
+  }, [detailSlug]);
+
+  const currentLibraryError =
+    libraryErrorKey === libraryRequestKey ? libraryError : null;
+  const libraryLoading =
+    loadedLibraryKey !== libraryRequestKey && libraryErrorKey !== libraryRequestKey;
+  const currentDetailResource =
+    detailSlug && loadedDetailSlug === detailSlug ? detailResource : null;
+  const currentDetailError =
+    detailSlug && detailErrorSlug === detailSlug ? detailError : null;
+  const detailLoading = !!detailSlug && !currentDetailResource && !currentDetailError;
+
   const showFeatured =
     activeCategory === "all" && normalizedQuery.length === 0 && !!featuredResource;
 
   const visibleResources =
     showFeatured && featuredResource
-      ? filteredResources.filter((resource) => resource.id !== featuredResource.id)
-      : filteredResources;
+      ? resources.filter((resource) => resource.id !== featuredResource.id)
+      : resources;
 
   const counts = CATEGORY_ORDER.reduce(
     (acc, category) => {
-      acc[category] = RESOURCE_DATA.filter(
-        (resource) => resource.category === category
-      ).length;
+      acc[category] = resourceMeta?.counts[category] ?? 0;
       return acc;
     },
-    { all: RESOURCE_DATA.length } as Partial<Record<TabCategory, number>>
+    {
+      all: resourceMeta?.total ?? 0,
+    } as Partial<Record<TabCategory, number>>
   );
+
+  if (route.type === "detail" && detailLoading) {
+    return (
+      <main className="resource-detail resource-detail--empty">
+        <div className="resource-detail__shell">
+          <ResourceStateNotice
+            eyebrow="Loading Resource"
+            title="Preparing the detail page"
+            description="Fetching the concept overview, related resources, and downloadable asset information."
+          />
+        </div>
+      </main>
+    );
+  }
+
+  if (route.type === "detail" && currentDetailResource) {
+    return (
+      <ResourceDetailPage
+        resource={currentDetailResource}
+        relatedResources={currentDetailResource.relatedResources}
+        onBack={() => navigateTo("/resources")}
+        onOpenResource={(slug) => navigateTo(`/resources/${slug}`)}
+      />
+    );
+  }
+
+  if (route.type === "detail" && currentDetailError) {
+    return (
+      <main className="resource-detail resource-detail--empty">
+        <div className="resource-detail__shell">
+          <ResourceStateNotice
+            eyebrow="Unavailable"
+            title="This resource could not be loaded"
+            description={currentDetailError}
+            actionLabel="Back to Library"
+            onAction={() => navigateTo("/resources")}
+          />
+        </div>
+      </main>
+    );
+  }
+
+  if (route.type === "not-found") {
+    return (
+      <main className="resource-detail resource-detail--empty">
+        <div className="resource-detail__shell">
+          <ResourceStateNotice
+            eyebrow="Page not found"
+            title="This resource path does not exist yet."
+            description="Return to the Pathfinder Library to continue exploring frameworks, playbooks, and tools."
+            actionLabel="Back to Library"
+            onAction={() => navigateTo("/resources")}
+          />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="resource-shell">
@@ -204,19 +273,28 @@ function App() {
       />
 
       <section className="resource-content">
+        {currentLibraryError && (
+          <ResourceStateNotice
+            eyebrow="Library Unavailable"
+            title="The resource library could not be loaded"
+            description={currentLibraryError}
+          />
+        )}
+
         {showFeatured && featuredResource && (
           <div className="resource-featured">
             <FeaturedBanner
               title={featuredResource.title}
               subtitle="Signature Framework"
-              description={featuredResource.description}
-              ctaLabel="Explore the RoadMap →"
-              ctaUrl={featuredResource.fileUrl}
+              description={featuredResource.summary}
+              ctaLabel="View Framework Details →"
+              ctaUrl={`/resources/${featuredResource.slug}`}
+              onCtaClick={() => navigateTo(`/resources/${featuredResource.slug}`)}
               category="Framework"
               resourceType={featuredResource.resourceType}
               stats={[
                 { value: "3", label: "Core Phases" },
-                { value: "6", label: "Curated Resources" },
+                { value: "8", label: "Curated Resources" },
                 { value: "0→1", label: "Founder Focus" },
               ]}
             />
@@ -227,9 +305,14 @@ function App() {
           <div>
             <p className="resource-toolbar__label">Curated Resource Set</p>
             <h2 className="resource-toolbar__title">
-              {visibleResources.length} resource
-              {visibleResources.length === 1 ? "" : "s"} for{" "}
-              {activeCategory === "all" ? "founders" : activeCategory.replace("_", " ")}
+              {libraryLoading
+                ? "Loading resources..."
+                : `${visibleResources.length} resource${
+                    visibleResources.length === 1 ? "" : "s"
+                  } for `}{" "}
+              {activeCategory === "all"
+                ? "founders"
+                : activeCategory.replace("_", " ")}
             </h2>
             <p className="resource-toolbar__subtitle">
               Strategy frameworks, practical tools, and founder guidance shaped
@@ -243,7 +326,13 @@ function App() {
           )}
         </div>
 
-        {visibleResources.length > 0 ? (
+        {!currentLibraryError && libraryLoading ? (
+          <ResourceStateNotice
+            eyebrow="Loading Library"
+            title="Fetching Pathfinder resources"
+            description="Pulling the latest frameworks, playbooks, research pieces, and downloadable tools from the backend."
+          />
+        ) : !currentLibraryError && visibleResources.length > 0 ? (
           <div className="resource-grid">
             {visibleResources.map((resource) => (
               <ResourceCard
@@ -253,34 +342,37 @@ function App() {
                 description={resource.description}
                 category={resource.category}
                 resourceType={resource.resourceType}
-                fileUrl={resource.fileUrl}
+                fileUrl={resource.detailUrl ?? `/resources/${resource.slug}`}
+                slug={resource.slug}
+                thumbnail={resource.thumbnailUrl ?? undefined}
                 isFeatured={resource.isFeatured}
                 tags={resource.tags}
                 readTime={resource.readTime}
+                actionLabel="View Details"
+                onAction={() => navigateTo(`/resources/${resource.slug}`)}
               />
             ))}
           </div>
-        ) : (
-          <div className="resource-empty">
-            <p className="resource-empty__eyebrow">No matching path found</p>
-            <h3>Try a broader keyword or switch back to all resources.</h3>
+        ) : !currentLibraryError ? (
+          <ResourceStateNotice
+            eyebrow="No matching path found"
+            title="Try a broader keyword or switch back to all resources."
+            description="Pathfinder's content is centered on founder alignment, market clarity, strategic sequencing, and practical 0→1 execution."
+          />
+        ) : null}
+
+        {!currentLibraryError && resourceMeta && (
+          <div className="resource-footer-note">
+            <p className="resource-footer-note__title">
+              Built around Pathfinder&apos;s founder-first message
+            </p>
             <p>
-              Pathfinder&apos;s content is centered on founder alignment, market
-              clarity, strategic sequencing, and practical 0→1 execution.
+              This page now pulls live content from Django: {resourceMeta.total} published
+              resources across {Object.values(resourceMeta.counts).filter(Boolean).length} active
+              categories.
             </p>
           </div>
         )}
-
-        <div className="resource-footer-note">
-          <p className="resource-footer-note__title">
-            Built around Pathfinder&apos;s founder-first message
-          </p>
-          <p>
-            This page stays intentionally focused: one hero, one featured
-            framework, one short company story, and a compact library of
-            high-signal resources.
-          </p>
-        </div>
       </section>
     </main>
   );

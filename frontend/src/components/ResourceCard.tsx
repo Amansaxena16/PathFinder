@@ -17,10 +17,13 @@ export interface ResourceCardProps {
   category: ResourceCategory;
   resourceType: ResourceType;
   fileUrl: string;
+  slug?: string;
   thumbnail?: string;
   isFeatured?: boolean;
   tags?: string[];
   readTime?: string; // e.g. "5 min read"
+  actionLabel?: string;
+  onAction?: () => void;
 }
 
 // ─── Config maps ──────────────────────────────────────────────────────────────
@@ -163,10 +166,13 @@ export default function ResourceCard({
   category,
   resourceType,
   fileUrl,
+  slug,
   thumbnail,
   isFeatured = false,
   tags = [],
   readTime,
+  actionLabel = "View Details",
+  onAction,
 }: ResourceCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isHovered,    setIsHovered]    = useState(false);
@@ -174,6 +180,10 @@ export default function ResourceCard({
   const typeConfig = TYPE_CONFIG[resourceType];
 
   const handleAccess = () => {
+    if (onAction) {
+      onAction();
+      return;
+    }
     window.open(fileUrl, "_blank", "noopener,noreferrer");
   };
 
@@ -190,7 +200,7 @@ export default function ResourceCard({
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      aria-label={`${title} — ${typeConfig.label}`}
+      aria-label={`${title} — ${typeConfig.label}${slug ? ` — ${slug}` : ""}`}
     >
 
       {/* ── Thumbnail area ──────────────────────────────────────────────────── */}
@@ -350,9 +360,9 @@ export default function ResourceCard({
               onClick={handleAccess}
               className="group/btn flex items-center gap-1.5 text-sm font-semibold transition-all duration-200"
               style={{ color: isHovered ? "#00B4B4" : "#1FC8C8" }}
-              aria-label={`Access ${title}`}
+              aria-label={`${actionLabel} ${title}`}
             >
-              Access
+              {actionLabel}
               <svg
                 className="transition-transform duration-200 group-hover/btn:translate-x-1"
                 width="14"

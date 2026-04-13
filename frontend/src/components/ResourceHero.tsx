@@ -34,8 +34,8 @@ export default function ResourceHero({ onSearch }: ResourceHeroProps) {
   };
 
   const stats = [
-    { value: "6", label: "Core Resources" },
-    { value: "3", label: "Growth Themes" },
+    { value: "8", label: "Core Resources" },
+    { value: "3", label: "Content Templates" },
     { value: "0→1", label: "Founder Focus" },
   ];
 
