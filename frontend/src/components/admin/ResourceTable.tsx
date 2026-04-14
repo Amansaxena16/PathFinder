@@ -21,11 +21,7 @@ export default function ResourceTable() {
 
 
   const handleDelete = async (id: number) => {
-
     await deleteResource(id);
-
-    fetchResources();
-
   };
 
 

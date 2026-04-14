@@ -82,6 +82,7 @@ export const deleteResource = async (id: number) => {
       },
     }
   );
+  getResources()
   await handleResponse(response);
 };
 

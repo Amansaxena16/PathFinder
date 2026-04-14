@@ -16,7 +16,6 @@ export interface ResourceCardProps {
   description: string;
   category: ResourceCategory;
   resourceType: ResourceType;
-  fileUrl: string;
   slug?: string;
   thumbnail?: string;
   isFeatured?: boolean;
@@ -165,7 +164,6 @@ export default function ResourceCard({
   description,
   category,
   resourceType,
-  fileUrl,
   slug,
   thumbnail,
   isFeatured = false,
@@ -184,7 +182,6 @@ export default function ResourceCard({
       onAction();
       return;
     }
-    window.open(fileUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
