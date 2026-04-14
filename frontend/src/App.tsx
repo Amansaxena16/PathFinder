@@ -62,10 +62,6 @@ function App() {
   const [currentPath, setCurrentPath] =
     useState(() => window.location.pathname);
 
-  const token =
-    localStorage.getItem("admin_token");
-
-
 
   /*
   HANDLE ROUTING
@@ -198,6 +194,7 @@ function App() {
     return (
 
       <ResourceStateNotice
+        eyebrow="Not Found"
         title="Page not found"
         description="Invalid route"
       />
@@ -217,6 +214,7 @@ function App() {
   
       return (
         <ResourceStateNotice
+          eyebrow="Not Found" 
           title="Resource not found"
           description="Invalid resource"
         />
@@ -297,6 +295,7 @@ function App() {
         {loading && (
 
           <ResourceStateNotice
+            eyebrow="Loading"
             title="Loading..."
             description="Fetching resources from backend"
           />
@@ -308,6 +307,7 @@ function App() {
         {error && (
 
           <ResourceStateNotice
+            eyebrow="Error"
             title="Error"
             description={error}
           />
@@ -346,6 +346,7 @@ function App() {
           filteredResources.length === 0 && (
 
             <ResourceStateNotice
+              eyebrow="No results"
               title="No resources"
               description="No matching results"
             />

@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import { updateResource, createResource } from "../../api/resourceAdminApi";
 
 const CATEGORIES = ["framework", "playbook", "market_map", "case_study", "tool", "blog"];
