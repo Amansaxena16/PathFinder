@@ -24,7 +24,7 @@ class PublishedResourceQuerysetMixin:
         return (
             Resource.objects.filter(is_published=True)
             .prefetch_related("related_resources")
-            .order_by("-is_featured", "-published_at", "title")
+            .order_by("-is_featured", "-is_published", "title")
         )
 
 
