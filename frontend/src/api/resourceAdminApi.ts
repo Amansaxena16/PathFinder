@@ -74,7 +74,7 @@ export const getResourcesWithJWT = async () => {
 export const deleteResource = async (id: number) => {
   const token = getAuthToken();
   const response = await fetch(
-    `${BASE_URL}/api/admin/resources/${id}/`,
+    `${BASE_URL}api/admin/resources/${id}/`,
     {
       method: "DELETE",
       headers: {
@@ -90,7 +90,7 @@ export const createResource = async (data:any) => {
 
   const token = getAuthToken();
   const res = await fetch(
-    `${BASE_URL}/api/admin/resources/`,
+    `${BASE_URL}api/admin/resources/`,
     {
       method: "POST",
       headers: {
@@ -108,7 +108,7 @@ export const createResource = async (data:any) => {
 export const updateResource = async (id: number, data: any) => {
   const token = getAuthToken();
   const res = await fetch(
-    `${BASE_URL}/api/admin/resources/${id}/`,
+    `${BASE_URL}api/admin/resources/${id}/`,
     {
       method: "PATCH",
       headers: {
