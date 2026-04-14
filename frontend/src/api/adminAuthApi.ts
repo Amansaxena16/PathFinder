@@ -3,7 +3,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const adminLogin = async (email: string, password: string) => {
 
-  const response = await fetch(`${BASE_URL}/login/admin/`, {
+  const response = await fetch(`${BASE_URL}login/admin/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const adminSignup = async (
   re_enter_password: string
 ) => {
 
-  const response = await fetch(`${BASE_URL}/signup/admin/`, {
+  const response = await fetch(`${BASE_URL}signup/admin/`, {
 
     method: "POST",
 
