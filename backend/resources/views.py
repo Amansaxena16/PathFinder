@@ -10,6 +10,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from .authentication import AdminJWTAuthentication
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from weasyprint import HTML
+
 class CsrfExemptSessionAuthentication(SessionAuthentication):
 
     def enforce_csrf(self, request):
@@ -250,3 +254,30 @@ class GetResourcesView(APIView):
         )
 
         return Response(serializer.data)
+
+class DownloadResourceView(APIView):
+
+    def get(self, request, id):
+
+        try:
+            resource = Resource.objects.get(id=id)
+        except Resource.DoesNotExist:
+            return HttpResponse("Resource not found", status=404)
+
+        html_string = render_to_string(
+            "pdf/resource_template.html",
+            {"resource": resource}
+        )
+
+        pdf_file = HTML(string=html_string).write_pdf()
+
+        response = HttpResponse(
+            pdf_file,
+            content_type="application/pdf"
+        )
+
+        response["Content-Disposition"] = (
+            f'attachment; filename="{resource.slug}.pdf"'
+        )
+
+        return response

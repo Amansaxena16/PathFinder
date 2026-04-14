@@ -17,4 +17,6 @@ urlpatterns = [
     path("api/admin/resources/<int:id>/",AdminResourceDetailView.as_view(),name="admin_resource_detail"),
     
     path('get/resources/', GetResourcesView.as_view(), name='get_resources'),
+    
+    path("resources/<int:id>/download-pdf/",DownloadResourceView.as_view(),name="download_resource_pdf"),
 ]

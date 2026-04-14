@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    font-family: Arial;
+    padding: 30px;
+}
+
+h1 {
+    color: #1A1A2E;
+}
+
+.tag {
+    background: #eee;
+    padding: 4px 8px;
+    margin-right: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>{{ resource.title }}</h1>
+
+<p><strong>Category:</strong> {{ resource.category }}</p>
+
+<p><strong>Read Time:</strong> {{ resource.read_time }}</p>
+
+<h3>Summary</h3>
+<p>{{ resource.summary }}</p>
+
+<h3>Description</h3>
+<p>{{ resource.description }}</p>
+
+<h3>Tags</h3>
+
+{% for tag in resource.tags.all %}
+<span class="tag">{{ tag.name }}</span>
+{% endfor %}
+
+</body>
+</html>
