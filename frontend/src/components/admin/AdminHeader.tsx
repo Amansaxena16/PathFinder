@@ -1,22 +1,21 @@
-import { logout } from "../../api/resourceAdminApi"; // adjust path if needed
-import { useRouter } from "next/navigation";
+import { logout } from "../../api/resourceAdminApi";
 
 export default function AdminHeader() {
 
-  const router = useRouter();
-
   const handleLogout = async () => {
     try {
-      await logout();   // call API function
-      localStorage.removeItem("access_token"); // remove token from storage
-      router.push("/admin/login"); // redirect to login page
+      await logout();
+      localStorage.removeItem("access_token");
+
+      // 👇 redirect using browser
+      window.location.href = "/admin/";
+
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
   return (
-
     <div
       style={{
         display: "flex",
@@ -70,7 +69,5 @@ export default function AdminHeader() {
       </div>
 
     </div>
-
   );
-
 }
