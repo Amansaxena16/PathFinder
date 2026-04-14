@@ -3,10 +3,20 @@ from django.http import FileResponse, Http404, HttpResponseRedirect
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .models import Resource
-from .serializers import ResourceDetailSerializer, ResourceListSerializer
+from .serializers import *
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import SessionAuthentication
 
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return
 
 class PublishedResourceQuerysetMixin:
     def get_base_queryset(self):
@@ -101,3 +111,132 @@ class ResourceDownloadView(PublishedResourceQuerysetMixin, APIView):
             return HttpResponseRedirect(resource.external_url)
 
         raise Http404("No downloadable asset is attached to this resource.")
+
+
+class AdminSignupView(APIView):
+
+    def post(self, request):
+
+        serializer = AdminSignupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Admin account created successfully"
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+class AdminLoginView(APIView):
+
+    def post(self, request):
+
+        serializer = AdminLoginSerializer(data=request.data)
+        if serializer.is_valid():
+
+            user = serializer.validated_data["user"]
+            refresh = RefreshToken()
+            refresh["user_id"] = user.id
+            refresh["admin_id"] = user.id
+            refresh["email"] = user.email
+
+            return Response({
+
+                "message": "Login successful",
+                "access_token": str(refresh.access_token),
+                "refresh_token": str(refresh),
+                "admin": {
+                    "id": user.id,
+                    "email": user.email,
+                }
+            })
+
+        return Response(serializer.errors, status=400)
+    
+class AdminResourceListCreateView(APIView):
+
+    authentication_classes = [JWTAuthentication, CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request):
+
+        resources = Resource.objects.all()
+        serializer = ResourceListSerializer(
+            resources,
+            many=True,
+            context={"request": request}
+        )
+
+        return Response(serializer.data)
+
+
+    def post(self, request):
+
+        serializer = ResourceWriteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+          
+class AdminResourceDetailView(APIView):
+    authentication_classes = [JWTAuthentication, CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, id):
+        try:
+            return Resource.objects.get(id=id)
+        except Resource.DoesNotExist:
+            return None
+
+
+    def patch(self, request, id):
+
+        resource = self.get_object(id)
+        if not resource:
+
+            return Response(
+                {"error": "Resource not found"},
+                status=404
+            )
+
+        serializer = ResourceWriteSerializer(
+            resource,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+
+    def delete(self, request, id):
+
+        resource = self.get_object(id)
+        if not resource:
+            return Response(
+                {"error": "Resource not found"},
+                status=404
+            )
+        resource.delete()
+
+        return Response(
+            {"message": "Resource deleted"},
+            status=204
+        )

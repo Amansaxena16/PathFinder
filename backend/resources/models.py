@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils import timezone
-
+from django.contrib.auth.hashers import make_password
 
 class Resource(models.Model):
+
     class Category(models.TextChoices):
         FRAMEWORK = "framework", "Framework"
         PLAYBOOK = "playbook", "Playbook"
@@ -17,11 +18,6 @@ class Resource(models.Model):
         TEMPLATE = "template", "Template"
         ARTICLE = "article", "Article"
 
-    class ContentTemplate(models.TextChoices):
-        CONCEPT = "concept", "Concept Overview"
-        RESEARCH = "research", "Research Brief"
-        DOWNLOAD = "download", "Downloadable Resource"
-
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     summary = models.TextField()
@@ -30,55 +26,31 @@ class Resource(models.Model):
     resource_type = models.CharField(max_length=20, choices=ResourceType.choices)
     read_time = models.CharField(max_length=50, blank=True)
     tags = models.JSONField(default=list, blank=True)
-    content_template = models.CharField(
-        max_length=20,
-        choices=ContentTemplate.choices,
-        default=ContentTemplate.CONCEPT,
-    )
-    overview = models.JSONField(
-        default=list,
-        blank=True,
-        help_text="Ordered list of opening overview paragraphs.",
-    )
-    sections = models.JSONField(
-        default=list,
-        blank=True,
-        help_text="List of sections. Example: [{'title': 'Why it matters', 'paragraphs': ['...']}]",
-    )
-    key_points = models.JSONField(
-        default=list,
-        blank=True,
-        help_text="Short bullet points shown in the detail sidebar.",
-    )
-    external_url = models.URLField(blank=True)
-    download_file = models.FileField(
-        upload_to="resources/downloads/",
-        blank=True,
-        null=True,
-    )
-    thumbnail = models.ImageField(
-        upload_to="resources/thumbnails/",
-        blank=True,
-        null=True,
-    )
     is_featured = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
-    published_at = models.DateTimeField(default=timezone.now)
-    related_resources = models.ManyToManyField(
-        "self",
-        blank=True,
-        symmetrical=False,
-        related_name="referenced_by_resources",
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-is_featured", "-published_at", "title"]
+        ordering = ["-is_featured", "-created_at"]
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.title
 
-    @property
-    def has_download(self) -> bool:
-        return bool(self.download_file or self.external_url)
+
+class AdminUser(models.Model):
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # hash password before saving
+        if not self.password.startswith("pbkdf2_"):
+            self.password = make_password(self.password)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.email

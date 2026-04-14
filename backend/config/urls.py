@@ -5,10 +5,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "api/resources/",
-        include(("resources.urls", "resources"), namespace="resources"),
-    ),
+    path("",include(("resources.urls", "resources"), namespace="resources"),),
 ]
 
 if settings.DEBUG:

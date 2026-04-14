@@ -9,6 +9,8 @@ import ResourceCard, {
   type ResourceCategory as CardCategory,
 } from "./components/ResourceCard";
 import ResourceHero from "./components/ResourceHero";
+import AdminPanel from "./components/admin/AdminPanel";
+import  AdminAuth from "./components/AdminAuth"
 import {
   PATHFINDER_PILLARS,
   fetchFeaturedResource,
@@ -36,6 +38,10 @@ function getRouteType(pathname: string) {
     return { type: "library" as const };
   }
 
+  if (cleanedPath === "/admin") {
+    return { type: "admin" as const };
+  }
+
   const detailMatch = cleanedPath.match(/^\/resources\/([^/]+)$/);
   if (detailMatch) {
     return { type: "detail" as const, slug: detailMatch[1] };
@@ -58,6 +64,7 @@ function App() {
   const [loadedDetailSlug, setLoadedDetailSlug] = useState<string | null>(null);
   const [detailErrorSlug, setDetailErrorSlug] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const token = localStorage.getItem("admin_token");
 
   useEffect(() => {
     const handlePopState = () => setCurrentPath(window.location.pathname);
@@ -209,6 +216,14 @@ function App() {
     );
   }
 
+  if (route.type === "admin") {
+
+    if (!token) {
+      return <AdminAuth />;
+    }
+    return <AdminPanel />;
+  }
+
   if (route.type === "not-found") {
     return (
       <main className="resource-detail resource-detail--empty">
@@ -307,9 +322,8 @@ function App() {
             <h2 className="resource-toolbar__title">
               {libraryLoading
                 ? "Loading resources..."
-                : `${visibleResources.length} resource${
-                    visibleResources.length === 1 ? "" : "s"
-                  } for `}{" "}
+                : `${visibleResources.length} resource${visibleResources.length === 1 ? "" : "s"
+                } for `}{" "}
               {activeCategory === "all"
                 ? "founders"
                 : activeCategory.replace("_", " ")}
@@ -373,6 +387,32 @@ function App() {
             </p>
           </div>
         )}
+
+        {/* ADMIN BUTTON */}
+        <div style={{ display: "flex", justifyContent: "center", margin: "40px 0" }}>
+          <button
+            onClick={() => navigateTo("/admin")}
+            style={{
+              backgroundColor: "#C8F135",
+              color: "#1A1A2E",
+              border: "none",
+              padding: "12px 26px",
+              borderRadius: "10px",
+              fontWeight: 600,
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              transition: "all 0.2s ease"
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#A8D420")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#C8F135")
+            }
+          >
+            Admin Access
+          </button>
+        </div>
       </section>
     </main>
   );
