@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import CategoryTabs, {
   type ResourceCategory as TabCategory,
@@ -53,7 +53,7 @@ function App() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
 
   const [activeCategory, setActiveCategory] =
     useState<TabCategory>("all");
@@ -249,9 +249,7 @@ function App() {
           />
       </div>
 
-      <ResourceHero
-        onSearch={setSearchQuery}
-      />
+      <ResourceHero/>
 
       {/* CATEGORY FILTER */}
 

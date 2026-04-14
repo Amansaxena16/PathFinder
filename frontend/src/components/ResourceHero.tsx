@@ -1,38 +1,8 @@
-import { useState, useCallback, useRef, type ChangeEvent } from "react";
-import { PATHFINDER_PILLARS } from "../data/resources";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface ResourceHeroProps {
-  onSearch: (query: string) => void;
-}
-
-// ─── Debounce helper ──────────────────────────────────────────────────────────
-function useDebounce(fn: (val: string) => void, delay: number) {
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  return useCallback(
-    (val: string) => {
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => fn(val), delay);
-    },
-    [fn, delay]
-  );
-}
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function ResourceHero({ onSearch }: ResourceHeroProps) {
-  const [query, setQuery] = useState("");
+export default function ResourceHero() {
 
-  const debouncedSearch = useDebounce(onSearch, 300);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    debouncedSearch(e.target.value);
-  };
-
-  const handleClear = () => {
-    setQuery("");
-    onSearch("");
-  };
 
   const stats = [
     { value: "8", label: "Core Resources" },

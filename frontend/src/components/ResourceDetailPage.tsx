@@ -1,4 +1,4 @@
-import React from "react";
+
 import type { RelatedResource, ResourceDetailItem } from "../data/resources";
 
 interface ResourceDetailPageProps {
