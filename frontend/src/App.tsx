@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CategoryTabs, {
   type ResourceCategory as TabCategory,
@@ -12,7 +12,6 @@ import ResourceStateNotice from "./components/ResourceStateNotice";
 import AdminPanel from "./components/admin/AdminPanel";
 import AdminAuth from "./components/AdminAuth";
 
-import { PATHFINDER_PILLARS } from "./data/resources";
 import ResourceDetail from "./components/ResourceDetail";
 import { getResourcesWithJWT } from "./api/resourceAdminApi";
 
@@ -242,35 +241,17 @@ function App() {
 
     <main className="resource-shell">
 
+      <div style={{backgroundColor: "#C6F357", border: "1px solid #2D2D2D", borderRadius: "30px", position:"absolute", top: "40px", left: "180px", padding: "20px", zIndex: 1}}>
+        <img
+            src="/path-logo-lime.svg"
+            alt="Background"
+          
+          />
+      </div>
+
       <ResourceHero
         onSearch={setSearchQuery}
       />
-
-
-
-      {/* PILLARS */}
-
-      <section className="resource-pillars">
-
-        {PATHFINDER_PILLARS.map((pillar) => (
-
-          <div key={pillar.title}>
-
-            <h3>
-              {pillar.title}
-            </h3>
-
-            <p>
-              {pillar.description}
-            </p>
-
-          </div>
-
-        ))}
-
-      </section>
-
-
 
       {/* CATEGORY FILTER */}
 
@@ -361,6 +342,9 @@ function App() {
           style={{
             textAlign: "center",
             marginTop: "40px",
+            position: "absolute",
+            top: "10px",
+            right: "40px",  
           }}
         >
 

@@ -120,3 +120,37 @@ export const updateResource = async (id: number, data: any) => {
   );
   return handleResponse(res);
 };
+
+
+export const downloadResourcePdf = async (resourceId: number) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}resources/${resourceId}/download-pdf/`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to download pdf");
+    }
+
+    const blob = await response.blob();
+
+    // create download link
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `resource-${resourceId}.pdf`;
+
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("PDF download error:", error);
+  }
+};

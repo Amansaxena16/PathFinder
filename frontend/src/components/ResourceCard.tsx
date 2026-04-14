@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from "react";
+import React, { useState, type ReactNode } from "react";
+import { downloadResourcePdf } from "../api/resourceAdminApi";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type ResourceType     = "pdf" | "video" | "template" | "article";
@@ -160,6 +161,7 @@ function ThumbnailPlaceholder({ category }: { category: ResourceCategory }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ResourceCard({
+  id,
   title,
   description,
   category,
@@ -182,6 +184,10 @@ export default function ResourceCard({
       onAction();
       return;
     }
+  };
+
+  const handleDownloadPdf = () => {
+    downloadResourcePdf(id);
   };
 
   return (
@@ -342,7 +348,7 @@ export default function ResourceCard({
             style={{ background: "#E4E8F0" }}
           />
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             {/* Left: resource type pill */}
             <div
               className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
@@ -352,22 +358,38 @@ export default function ResourceCard({
               Free Resource
             </div>
 
-            {/* Right: Access CTA */}
             <button
-                onClick={handleAccess}
+              onClick={handleAccess}
+              style={{
+                background: "#B6E82A",
+                color: "#1A1A2E",
+                padding: "8px 14px",
+                borderRadius: "8px",
+                border: "none",
+                fontWeight: 600,
+                cursor: "pointer"
+              }}
+            >
+              {actionLabel}
+            </button>
+
+            {/* Download PDF Button */}
+            {resourceType === "pdf" && (
+              <button
+                onClick={handleDownloadPdf}
                 style={{
-                  background: "#B6E82A",
-                  color: "#1A1A2E",
+                  background: "#1A1A2E",
+                  color: "#C8F135",
                   padding: "8px 14px",
                   borderRadius: "8px",
                   border: "none",
                   fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all .2s ease"
+                  cursor: "pointer"
                 }}
               >
-                {actionLabel}
+                Download PDF
               </button>
+            )}
           </div>
         </div>
       </div>
