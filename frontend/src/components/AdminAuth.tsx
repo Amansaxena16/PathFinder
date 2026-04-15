@@ -39,7 +39,7 @@ export default function AdminAuth() {
         );
 
         setSuccess("Account created successfully");
-
+        window.location.href = "/admin";
         console.log("admin signup", res);
 
       }
