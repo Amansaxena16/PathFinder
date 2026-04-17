@@ -3,40 +3,34 @@ import AdminHeader from "./AdminHeader";
 import ResourceTable from "./ResourceTable";
 import ResourceEditModal from "./ResourceEditModal";
 
-export default function AdminPanel() {
+interface AdminPanelProps {
+  onBack?: () => void;
+}
+
+export default function AdminPanel({ onBack }: AdminPanelProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleCreateResource = () => {
-    setShowCreateModal(true);
-  };
-
-  const handleModalClose = () => {
-    setShowCreateModal(false);
-  };
+  const [refreshKey, setRefreshKey]           = useState(0);
 
   const handleResourceCreated = () => {
-    // Refresh the resource table
-    setRefreshKey(prev => prev + 1);
+    setRefreshKey((k) => k + 1);
     setShowCreateModal(false);
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#F5F7FA",
-        padding: "40px"
-      }}
-    >
-      <AdminHeader onCreateClick={handleCreateResource} />
+    <div className="admin-page">
+      <AdminHeader
+        onBack={onBack}
+        onCreateClick={() => setShowCreateModal(true)}
+      />
 
-      <ResourceTable key={refreshKey} />
+      <div className="admin-body">
+        <ResourceTable key={refreshKey} />
+      </div>
 
       {showCreateModal && (
         <ResourceEditModal
           mode="create"
-          onClose={handleModalClose}
+          onClose={() => setShowCreateModal(false)}
           onUpdated={handleResourceCreated}
         />
       )}

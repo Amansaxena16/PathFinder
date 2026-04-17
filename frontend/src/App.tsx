@@ -4,10 +4,10 @@ import CategoryTabs, {
   type ResourceCategory as TabCategory,
 } from "./components/CatergoryTab";
 
-import ResourceCard from "./components/ResourceCard";
-
 import ResourceHero from "./components/ResourceHero";
 import ResourceStateNotice from "./components/ResourceStateNotice";
+import ResourceCarousel from "./components/ResourceCarousel";
+import Navbar from "./components/Navbar";
 
 import AdminPanel from "./components/admin/AdminPanel";
 import AdminAuth from "./components/AdminAuth";
@@ -177,11 +177,11 @@ function App() {
   */
 
   if (route.type === "admin") {
-    const token = localStorage.getItem("admin_token");  
+    const token = localStorage.getItem("admin_token");
     if (!token) {
       return <AdminAuth />;
     }
-    return <AdminPanel />;
+    return <AdminPanel onBack={() => navigateTo("/")} />;
   }
 
   /*
@@ -238,141 +238,62 @@ function App() {
   */
 
   return (
+    <div className="resource-shell">
+      <Navbar onAdminClick={() => navigateTo("/admin")} onNavigate={navigateTo} />
 
-    <main className="resource-shell">
+      <main>
+        <ResourceHero />
 
-      <div style={{backgroundColor: "#C6F357", border: "1px solid #2D2D2D", borderRadius: "30px", position:"absolute", top: "40px", left: "180px", padding: "20px", zIndex: 1}}>
-        <img
-            src="/path-logo-lime.svg"
-            alt="Background"
-          
-          />
-      </div>
+        <CategoryTabs
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+          counts={{ all: resources.length }}
+        />
 
-      <ResourceHero/>
-
-      {/* CATEGORY FILTER */}
-
-      <CategoryTabs
-
-        activeCategory={activeCategory}
-
-        onSelect={setActiveCategory}
-
-        counts={{
-          all: resources.length,
-        }}
-
-      />
-
-
-
-      {/* RESOURCE LIST */}
-
-      <section className="resource-content">
-
-        {loading && (
-
-          <ResourceStateNotice
-            eyebrow="Loading"
-            title="Loading..."
-            description="Fetching resources from backend"
-          />
-
-        )}
-
-
-
-        {error && (
-
-          <ResourceStateNotice
-            eyebrow="Error"
-            title="Error"
-            description={error}
-          />
-
-        )}
-
-
-
-        {!loading &&
-          filteredResources.length > 0 && (
-
-            <div className="resource-grid">
-              {filteredResources.map((resource) => (
-                <ResourceCard
-                key={resource.id}
-                id={resource.id}
-                title={resource.title}
-                description={resource.description}
-                category={resource.category}
-                resourceType={resource.resource_type}
-                slug={resource.slug}
-                thumbnail={resource.thumbnail_url}
-                tags={resource.tags}
-                readTime={resource.read_time}
-                actionLabel="View Details"
-                onAction={() =>
-                  navigateTo(`/resources/${resource.slug}`)
-                }
-                />
-              ))}
-            </div>
-
+        <section className="resource-content">
+          {loading && (
+            <ResourceStateNotice
+              eyebrow="Loading"
+              title="Loading..."
+              description="Fetching resources from backend"
+            />
           )}
 
-        {!loading &&
-          filteredResources.length === 0 && (
+          {error && (
+            <ResourceStateNotice
+              eyebrow="Error"
+              title="Error"
+              description={error}
+            />
+          )}
 
+          {!loading && filteredResources.length > 0 && (
+            <ResourceCarousel
+              resources={filteredResources.map((r) => ({
+                id: r.id,
+                title: r.title,
+                description: r.description,
+                category: r.category,
+                resourceType: r.resource_type,
+                slug: r.slug,
+                thumbnail: r.thumbnail_url,
+                tags: r.tags,
+                readTime: r.read_time,
+                onAction: () => navigateTo(`/resources/${r.slug}`),
+              }))}
+            />
+          )}
+
+          {!loading && filteredResources.length === 0 && (
             <ResourceStateNotice
               eyebrow="No results"
               title="No resources"
               description="No matching results"
             />
-
           )}
-
-
-
-        {/* ADMIN BUTTON */}
-
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "40px",
-            position: "absolute",
-            top: "10px",
-            right: "40px",  
-          }}
-        >
-
-          <button
-
-            onClick={() =>
-              navigateTo("/admin")
-            }
-
-            style={{
-              padding: "12px 24px",
-              background: "#C8F135",
-              border: "none",
-              borderRadius: "10px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-
-          >
-
-          Admin Access
-
-          </button>
-
-        </div>
-
-      </section>
-
-    </main>
-
+        </section>
+      </main>
+    </div>
   );
 
 }
